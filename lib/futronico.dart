@@ -4,8 +4,6 @@ import 'dart:async';
 import 'dart:ffi';
 import 'dart:isolate';
 import 'package:ffi/ffi.dart';
-import 'package:path/path.dart' as path;
-
 import 'enum/ftr_param.dart';
 import 'futronic_enroll_result.dart';
 import 'futronic_functions_typedefs.dart';
@@ -21,8 +19,6 @@ typedef showMessageBox = int Function(
 
 class Futronico {
   static final dll = DynamicLibrary.open("ftrScanAPI.dll");
-  static final dllTeste = DynamicLibrary.open(path.join("dll", "dll_zap.dll"));
-
   static bool _isInitialized = false;
 
   static StreamController<FutronicStatus> futronicStatusController =
@@ -30,8 +26,8 @@ class Futronico {
 
   //Definindo buffers
   int _imageSize = 0;
-  static Pointer<FTR_DATA> _ftrDataBuffer = calloc<FTR_DATA>();
-  static Pointer<FTR_ENROLL_DATA> _ftrEnrollDataBuffer =
+  static final Pointer<FTR_DATA> _ftrDataBuffer = calloc<FTR_DATA>();
+  static final Pointer<FTR_ENROLL_DATA> _ftrEnrollDataBuffer =
       calloc<FTR_ENROLL_DATA>();
 
   // Definindo funções
@@ -95,6 +91,9 @@ class Futronico {
         _ftrSetParam(FtrParam.maxModels, maxTemplates ?? 5);
     if (configureFrameSource != 0) {
       throw FutronicError(FutronicUtils.getErrorMessage(configureFrameSource));
+    }
+    if (configureMaxTemplates != 0) {
+      throw FutronicError(FutronicUtils.getErrorMessage(configureMaxTemplates));
     }
     Pointer<Int64> frameWidthPTR = calloc<Int64>();
     Pointer<Int64> frameHeightPTR = calloc<Int64>();
