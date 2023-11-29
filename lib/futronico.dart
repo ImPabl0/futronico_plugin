@@ -18,7 +18,7 @@ typedef showMessageBox = int Function(
     Pointer<Utf16> message, Pointer<Utf16> topic);
 
 class Futronico {
-  static final dll = DynamicLibrary.open("ftrScanAPI.dll");
+  static final dll = DynamicLibrary.open("FTRAPI.dll");
   static bool _isInitialized = false;
 
   static StreamController<FutronicStatus> futronicStatusController =
