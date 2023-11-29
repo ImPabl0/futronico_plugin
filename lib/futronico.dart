@@ -24,6 +24,8 @@ class Futronico {
   static StreamController<FutronicStatus> futronicStatusController =
       StreamController<FutronicStatus>.broadcast();
 
+  Isolate? _currentIsolate;
+
   //Definindo buffers
   int _imageSize = 0;
   static final Pointer<FTR_DATA> _ftrDataBuffer = calloc<FTR_DATA>();
@@ -36,9 +38,6 @@ class Futronico {
 
   Terminate get _terminate =>
       dll.lookup<NativeFunction<TerminateFunc>>("FTRTerminate").asFunction();
-
-  Enroll get _enroll =>
-      dll.lookup<NativeFunction<EnrollFunc>>("FTREnroll").asFunction();
 
   EnrollX get _enrollX =>
       dll.lookup<NativeFunction<EnrollXFunc>>("FTREnrollX").asFunction();
@@ -146,18 +145,6 @@ class Futronico {
     }
   }
 
-  List<int> enroll() {
-    int enrollResult = _enroll(nullptr, 3, _ftrDataBuffer);
-    if (enrollResult != 0) {
-      throw FutronicError(FutronicUtils.getErrorMessage(enrollResult));
-    }
-    List<int> template = _ftrDataBuffer.ref.pData
-        .asTypedList(_ftrDataBuffer.ref.dwSize)
-        .toList();
-    sendPort?.send(template);
-    return template;
-  }
-
   List<int> enrollX() {
     int enrollDataSize = sizeOf<FTR_ENROLL_DATA>();
     _ftrEnrollDataBuffer.ref.dwSize = enrollDataSize;
@@ -178,12 +165,12 @@ class Futronico {
     return template;
   }
 
-  Future<FutronicEnrollResult> enrollIsolate() async {
+  Future<FutronicEnrollResult> enrollTemplate() async {
     ReceivePort receivePort = ReceivePort();
     FutronicEnrollResult futronicEnrollResult = FutronicEnrollResult();
     Completer<FutronicEnrollResult> completer =
         Completer<FutronicEnrollResult>();
-    Isolate.spawn((message) {
+    _currentIsolate = await Isolate.spawn((message) {
       terminate();
       initialize(sendPort: message);
       enrollX();
@@ -205,10 +192,19 @@ class Futronico {
     return await completer.future;
   }
 
+  bool cancelOperation() {
+    try {
+      _currentIsolate?.kill(priority: Isolate.immediate);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   Future<bool> verify(List<int> template) async {
     ReceivePort receivePort = ReceivePort();
     Completer<bool> completer = Completer<bool>();
-    Isolate.spawn((message) {
+    _currentIsolate = await Isolate.spawn((message) {
       terminate();
       initialize();
       Pointer<FTR_DATA> templateToCompare = calloc<FTR_DATA>();

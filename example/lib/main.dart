@@ -86,7 +86,7 @@ class _FutronicExamplePageState extends State<FutronicExamplePage> {
           try {
             if (!hasReceivedSomeBiometry) {
               FutronicEnrollResult enrollResult =
-                  await futronico.enrollIsolate();
+                  await futronico.enrollTemplate();
               ultimaDigital = enrollResult.enrollTemplate;
               setState(() {
                 textoResultado =
