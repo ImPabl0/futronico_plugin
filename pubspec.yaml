@@ -1,10 +1,10 @@
 name: futronic
-description: A new Flutter FFI plugin project.
+description: A plugin to facilitate the use of futronic devices.
 version: 0.0.1
-homepage:
+repository: https://github.com/ImPabl0/futronico_plugin
 
 environment:
-  sdk: '>=2.19.3 <3.0.0'
+  sdk: ">=2.19.3 <3.0.0"
   flutter: ">=2.11.0"
 
 dependencies:
@@ -38,11 +38,11 @@ flutter:
   # Please refer to README.md for a detailed explanation.
   plugin:
     platforms:
-    # This FFI plugin project was generated without specifying any
-    # platforms with the `--platform` argument. If you see the `some_platform` map below, remove it and
-    # then add platforms following the instruction here:
-    # https://flutter.dev/docs/development/packages-and-plugins/developing-packages#plugin-platforms
-    # -------------------
+      # This FFI plugin project was generated without specifying any
+      # platforms with the `--platform` argument. If you see the `some_platform` map below, remove it and
+      # then add platforms following the instruction here:
+      # https://flutter.dev/docs/development/packages-and-plugins/developing-packages#plugin-platforms
+      # -------------------
       some_platform:
         ffiPlugin: true
     # -------------------
