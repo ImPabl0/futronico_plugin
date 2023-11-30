@@ -124,7 +124,7 @@ class Futronico {
     _getParam(FtrParam.maxTemplateSize.value, maxTemplateSize);
 
     _ftrDataBuffer.ref.pData =
-        calloc<Int32>(sizeOf<Int64>() * maxTemplateSize.value);
+        calloc<Uint8>(sizeOf<Int64>() * maxTemplateSize.value);
 
     _setCallbackFunc(FtrParam.cbControl.value, Pointer.fromFunction(callback));
   }
@@ -209,7 +209,7 @@ class Futronico {
       initialize();
       Pointer<FTR_DATA> templateToCompare = calloc<FTR_DATA>();
       templateToCompare.ref.dwSize = template.length;
-      templateToCompare.ref.pData = calloc<Int32>(template.length);
+      templateToCompare.ref.pData = calloc<Uint8>(template.length);
       templateToCompare.ref.pData
           .asTypedList(template.length)
           .setAll(0, template);

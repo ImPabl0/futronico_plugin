@@ -6,7 +6,7 @@ import 'dart:ffi';
 class FTR_DATA extends Struct {
   @Int32()
   external int dwSize;
-  external Pointer<Int32> pData;
+  external Pointer<Uint8> pData;
 }
 
 @Packed(1)
