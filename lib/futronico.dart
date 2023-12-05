@@ -3,7 +3,10 @@
 import 'dart:async';
 import 'dart:ffi';
 import 'dart:isolate';
+import 'dart:ui';
 import 'package:ffi/ffi.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'enum/ftr_param.dart';
 import 'futronic_enroll_result.dart';
 import 'futronic_functions_typedefs.dart';
@@ -170,11 +173,15 @@ class Futronico {
     FutronicEnrollResult futronicEnrollResult = FutronicEnrollResult();
     Completer<FutronicEnrollResult> completer =
         Completer<FutronicEnrollResult>();
-    _currentIsolate = await Isolate.spawn((message) {
+
+    _currentIsolate = await Isolate.spawn((message) async {
+      BackgroundIsolateBinaryMessenger.ensureInitialized(
+          message[0] as RootIsolateToken);
+      DartPluginRegistrant.ensureInitialized();
       terminate();
-      initialize(sendPort: message);
+      initialize(sendPort: message[1] as SendPort);
       enrollX();
-    }, receivePort.sendPort);
+    }, [RootIsolateToken.instance!, receivePort.sendPort]);
     receivePort.listen((message) {
       if (message is FutronicStatus) {
         futronicStatusController.add(message);
@@ -194,6 +201,7 @@ class Futronico {
 
   bool cancelOperation() {
     try {
+      terminate();
       _currentIsolate?.kill(priority: Isolate.immediate);
       return true;
     } catch (e) {

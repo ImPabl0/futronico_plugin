@@ -5,6 +5,7 @@ import 'package:futronic/futronic_utils.dart';
 import 'package:futronic/futronico.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const FutronicoExample());
 }
 
@@ -78,6 +79,11 @@ class _FutronicExamplePageState extends State<FutronicExamplePage> {
             Text(
               textoResultado,
             ),
+            TextButton(
+                onPressed: () {
+                  futronico.cancelOperation();
+                },
+                child: Text("Cancelar leitura"))
           ],
         ),
       ),
