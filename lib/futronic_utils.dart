@@ -55,7 +55,7 @@ class FutronicUtils {
   };
 
   static String getErrorMessage(int errorCode) {
-    throw FutronicError(_mapErrorCodes[errorCode]!);
+    return _mapErrorCodes[errorCode] ?? "Erro desconhecido";
   }
 
   static Future<Image> bytesToImage(Uint8List imgBytes) async {
