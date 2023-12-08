@@ -5,7 +5,6 @@ import 'dart:ffi';
 import 'dart:isolate';
 import 'dart:ui';
 import 'package:ffi/ffi.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'enum/ftr_param.dart';
 import 'futronic_enroll_result.dart';
@@ -14,6 +13,13 @@ import 'futronic_status.dart';
 import 'futronic_utils.dart';
 import 'futronico_types.dart';
 import 'structs.dart';
+export 'enum/ftr_param.dart';
+export 'futronic_enroll_result.dart';
+export 'futronic_functions_typedefs.dart';
+export 'futronic_status.dart';
+export 'futronic_utils.dart';
+export 'futronico_types.dart';
+export 'structs.dart';
 
 typedef showMessageBoxFunc = Int32 Function(
     Pointer<Utf16> message, Pointer<Utf16> topic);
