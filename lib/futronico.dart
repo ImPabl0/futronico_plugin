@@ -201,9 +201,10 @@ class Futronico {
         completer.complete(futronicEnrollResult);
       }
       if (message is List<dynamic>) {
-        throw FutronicError(message[0]);
+        completer.completeError(FutronicError(message[0]));
       }
     });
+
     await completer.future;
     receivePort.close();
     return await completer.future;
@@ -245,7 +246,7 @@ class Futronico {
         completer.complete(message);
       }
       if (message is List<dynamic>) {
-        throw FutronicError(message[0]);
+        completer.completeError(FutronicError(message[0]));
       }
     });
     await completer.future;
