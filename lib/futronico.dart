@@ -181,7 +181,8 @@ class Futronico {
       terminate();
       initialize(sendPort: message[1] as SendPort);
       enrollX();
-    }, [RootIsolateToken.instance!, receivePort.sendPort]);
+    }, [RootIsolateToken.instance!, receivePort.sendPort], onError: sendPort);
+    _currentIsolate?.addErrorListener(receivePort.sendPort);
     receivePort.listen((message) {
       if (message is FutronicStatus) {
         futronicStatusController.add(message);
@@ -192,6 +193,9 @@ class Futronico {
       if (message is List<int>) {
         futronicEnrollResult.enrollTemplate = message;
         completer.complete(futronicEnrollResult);
+      }
+      if (message is List<dynamic>) {
+        throw FutronicError(message[0]);
       }
     });
     await completer.future;
@@ -228,9 +232,14 @@ class Futronico {
       }
       message.send(bResult.value);
     }, receivePort.sendPort);
+
+    _currentIsolate?.addErrorListener(receivePort.sendPort);
     receivePort.listen((message) {
       if (message is bool) {
         completer.complete(message);
+      }
+      if (message is List<dynamic>) {
+        throw FutronicError(message[0]);
       }
     });
     await completer.future;

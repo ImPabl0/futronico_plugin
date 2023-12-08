@@ -74,4 +74,8 @@ class FutronicError implements Exception {
   final String message;
 
   FutronicError(this.message);
+  @override
+  String toString() {
+    return message;
+  }
 }
