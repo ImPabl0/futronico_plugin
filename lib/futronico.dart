@@ -200,7 +200,7 @@ class Futronico {
         futronicEnrollResult.enrollTemplate = message;
         completer.complete(futronicEnrollResult);
       }
-      if (message is List<dynamic>) {
+      if (message is List<String>) {
         completer.completeError(FutronicError(message[0]));
       }
     });
@@ -245,7 +245,7 @@ class Futronico {
       if (message is bool) {
         completer.complete(message);
       }
-      if (message is List<dynamic>) {
+      if (message is List<String>) {
         completer.completeError(FutronicError(message[0]));
       }
     });
